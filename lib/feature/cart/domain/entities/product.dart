@@ -48,6 +48,7 @@ class Product {
   // ProductOptionDetails? productOptionDetails;
   String? dispCtgrNo1;
   String? stock;
+  @HiveField(3)
   int qty = 0;
 
   bool isSelected = false;
