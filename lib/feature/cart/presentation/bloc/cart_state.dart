@@ -19,3 +19,17 @@ class CartLoadedState extends CartState {
 
   const CartLoadedState({required this.productData, required this.cartData});
 }
+
+class DetailLoadingState extends CartState {}
+
+class DetailLoadedState extends CartState {
+  final Product product;
+
+  DetailLoadedState({required this.product});
+}
+
+class DetailLoadedFailedState extends CartState {
+  final String message;
+
+  DetailLoadedFailedState({required this.message});
+}

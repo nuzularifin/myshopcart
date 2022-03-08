@@ -87,6 +87,17 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           cartData.addAll(s);
         });
         emit(CartLoadedState(cartData: cartData, productData: productData));
+      } else if (event is DetailProductLoadedEvent) {
+        emit(DetailLoadingState());
+        var detailProduct = await getDetailProductUseCase(
+            GetDetailProductParams(prdNo: event.prdNo));
+        detailProduct.fold((l) {
+          emit(DetailLoadedFailedState(message: "Get detail product failed!"));
+        }, (r) {
+          emit(DetailLoadedState(product: r));
+        });
+
+        emit(CartLoadedState(cartData: cartData, productData: productData));
       }
     });
   }

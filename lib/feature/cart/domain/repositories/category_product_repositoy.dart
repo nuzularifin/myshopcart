@@ -6,7 +6,7 @@ import '../entities/product.dart';
 
 abstract class CategoryProductRepository {
   Future<Either<Failure, ResponseProducts>> getProductList(int page);
-  Future<Either<Failure, ResponseProducts>> getDetailProduct(int prdNo);
+  Future<Either<Failure, Product>> getDetailProduct(String prdNo);
   Future<Either<Failure, List<Product>>> getCartList();
   //! From DB
   Future<Either<Failure, List<Product>>> addProductToCart(Product product);

@@ -18,6 +18,12 @@ class ItemLoadedEvent extends CartEvent {
 
 class ItemLoadedMoreEvent extends CartEvent {}
 
+class DetailProductLoadedEvent extends CartEvent {
+  final String prdNo;
+
+  DetailProductLoadedEvent({required this.prdNo});
+}
+
 class AddingItemIntoCartEvent extends CartEvent {
   final Product selectedProduct;
 

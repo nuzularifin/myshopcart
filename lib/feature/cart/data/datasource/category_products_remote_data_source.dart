@@ -4,12 +4,13 @@ import 'package:myshopcart/core/error/exception.dart';
 import 'package:myshopcart/core/network/dio_handling_response.dart';
 import 'package:myshopcart/core/network/dio_service.dart';
 import 'package:myshopcart/feature/cart/data/datasource/category_products_local_data_source.dart';
+import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import 'package:xml2json/xml2json.dart';
 
 abstract class CategoryProductRemoteDataSource {
   Future<ResponseProducts> getProductList(int page);
-  Future<ResponseProducts> getDetailProduct(int prdNo);
+  Future<Product> getDetailProduct(String prdNo);
 }
 
 class CategoryProductRemoteDataSourceImpl
@@ -25,7 +26,6 @@ class CategoryProductRemoteDataSourceImpl
   Future<ResponseProducts> getProductList(int page) async {
     try {
       dioService.settingLog();
-      // var response = await dioService.dio.get('cateservice/category/1');
       var response = await dioService.dio
           .get('prodservices/product/listing', queryParameters: {"page": page});
       if (response.statusCode == 200) {
@@ -48,18 +48,18 @@ class CategoryProductRemoteDataSourceImpl
   }
 
   @override
-  Future<ResponseProducts> getDetailProduct(int prdNo) async {
+  Future<Product> getDetailProduct(String prdNo) async {
     try {
       dioService.settingLog();
       var response = await dioService.dio.get(
-          ' http://api.elevenia.co.id/rest/prodservices/product/details/$prdNo');
+          'http://api.elevenia.co.id/rest/prodservices/product/details/$prdNo');
       if (response.statusCode == 200) {
         Xml2Json xml2json = Xml2Json();
         xml2json.parse(response.data.toString());
         var json = xml2json.toParker();
         print(json);
-        ResponseProducts categoryProduct =
-            ResponseProducts.fromJson(jsonDecode(json));
+        final body = jsonDecode(json);
+        Product categoryProduct = Product.fromJson(body['Product']);
         return categoryProduct;
       } else {
         throw ServerException();

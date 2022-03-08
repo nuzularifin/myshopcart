@@ -30,7 +30,7 @@ class ItemProductList extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (_) => BlocProvider.value(
-                      child: DetailProductPage(product: product),
+                      child: DetailProductPage(product, product.isSelected),
                       value: BlocProvider.of<CartBloc>(context))));
         },
         child: Column(

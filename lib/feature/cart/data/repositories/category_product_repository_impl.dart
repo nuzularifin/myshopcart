@@ -34,7 +34,7 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository {
 
   //? Detail Product
   @override
-  Future<Either<Failure, ResponseProducts>> getDetailProduct(int prdNo) async {
+  Future<Either<Failure, Product>> getDetailProduct(String prdNo) async {
     if (await networkInfo.isConnected) {
       return Right(
           await categoryProductRemoteDataSource.getDetailProduct(prdNo));
