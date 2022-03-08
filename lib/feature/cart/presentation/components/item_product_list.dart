@@ -9,19 +9,9 @@ import '../../domain/entities/product.dart';
 
 class ItemProductList extends StatelessWidget {
   final Product product;
-  final BuildContext context;
-  const ItemProductList(
-      {Key? key, required this.product, required this.context})
-      : super(key: key);
+  const ItemProductList({Key? key, required this.product}) : super(key: key);
 
-  openCart() {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => BlocProvider.value(
-                child: CartListPage(),
-                value: BlocProvider.of<CartBloc>(context))));
-  }
+  openCart() {}
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +70,7 @@ class ItemProductList extends StatelessWidget {
                   const SizedBox(
                     height: 4,
                   ),
-                  Text('${product.selPrc}',
+                  Text('Rp. ${product.selPrc}',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -116,7 +106,13 @@ class ItemProductList extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () {
-                          // openCart(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => BlocProvider.value(
+                                      child: CartListPage(),
+                                      value:
+                                          BlocProvider.of<CartBloc>(context))));
                         },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.blue[800],

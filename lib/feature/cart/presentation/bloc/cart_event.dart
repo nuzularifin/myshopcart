@@ -28,7 +28,7 @@ class ItemLoadedMorePage extends CartEvent {
 class DetailProductLoadedEvent extends CartEvent {
   final String prdNo;
 
-  DetailProductLoadedEvent({required this.prdNo});
+  const DetailProductLoadedEvent({required this.prdNo});
 }
 
 class AddingItemIntoCartEvent extends CartEvent {

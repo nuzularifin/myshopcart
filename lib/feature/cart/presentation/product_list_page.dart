@@ -108,26 +108,36 @@ class _ProductListPageState extends State<ProductListPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.7,
-                                mainAxisSpacing: 5,
-                                crossAxisSpacing: 10),
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount:
-                            productData.isNotEmpty ? productData.length : 0,
-                        itemBuilder: (context, index) {
-                          return ItemProductList(
-                            product: productData[index],
-                            context: context,
-                          );
-                        }),
-                  ),
+                  if (state is CartLoadingState)
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(child: CircularProgressIndicator()),
+                    )
+                  else if (state is CartEmptyState)
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: const Center(child: Text('Produk kosong')),
+                    )
+                  else
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 0.7,
+                                  mainAxisSpacing: 5,
+                                  crossAxisSpacing: 10),
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount:
+                              productData.isNotEmpty ? productData.length : 0,
+                          itemBuilder: (context, index) {
+                            return ItemProductList(product: productData[index]);
+                          }),
+                    ),
                 ],
               ),
             ),

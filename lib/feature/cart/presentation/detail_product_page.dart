@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
+import 'package:myshopcart/feature/cart/presentation/cart_list_page.dart';
 
 class DetailProductPage extends StatefulWidget {
   Product product;
@@ -126,7 +127,13 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         width: double.infinity,
                         child: ElevatedButton(
                             onPressed: () {
-                              // openCart();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => BlocProvider.value(
+                                          child: CartListPage(),
+                                          value: BlocProvider.of<CartBloc>(
+                                              context))));
                             },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.blue[800],

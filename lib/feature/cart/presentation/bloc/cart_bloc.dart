@@ -40,16 +40,33 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(CartLoadingState());
         var product =
             await getProductListUsecase(GetProductListParams(page: event.page));
+        bool statusRequest = false;
         product.fold((failure) async {
           productData = [];
+          statusRequest = true;
         }, (response) {
           if (response.products!.product!.isEmpty) {
             productData = [];
+            emit(CartEmptyState());
           } else {
             if (response.products!.product!.length < 5) emit(LastPage());
+            productData = [];
             productData.addAll(response.products!.product!);
           }
         });
+
+        if (statusRequest) {
+          emit(CartLoadingState());
+          var productCached = await getCachedListProductUseCase(NoParams());
+          statusRequest = false;
+          productCached.fold((l) {
+            productData = [];
+            emit(CartEmptyState());
+          }, (r) {
+            emit(LastPage());
+            if (r.products != null) productData.addAll(r.products!.product!);
+          });
+        }
 
         var cartItems = await getCartListUsecase(NoParams());
         cartItems.fold((failure) {

@@ -79,6 +79,12 @@ class CategoryProductsLocalDataSourceImpl
   Future<void> saveProductToDatabase(List<Product> products) async {
     var box = await Hive.openBox<Product>('products');
     for (final data in products) {
+      List<Product> tempData = box.values.toList();
+      int index = tempData.indexWhere((element) => data.prdNo == element.prdNo);
+      if (index != -1) {
+        print('Delete the Data in $index has same value ${data.prdNo}');
+        box.deleteAt(index);
+      }
       box.add(data);
       print('save to db Product number ${data.prdNo}');
     }

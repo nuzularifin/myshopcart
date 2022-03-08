@@ -1,4 +1,3 @@
-import 'package:myshopcart/core/error/exception.dart';
 import 'package:myshopcart/core/network/network_info.dart';
 import 'package:myshopcart/feature/cart/data/datasource/category_products_local_data_source.dart';
 import 'package:myshopcart/feature/cart/data/datasource/category_products_remote_data_source.dart';
@@ -29,13 +28,13 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository {
     if (await networkInfo.isConnected) {
       return Right(await categoryProductRemoteDataSource.getProductList(page));
     } else {
-      try {
-        final cachedProduct =
-            await categoryProductsLocalDataSource.getCachedProduct();
-        return Right(cachedProduct);
-      } on ServerException {
-        return Left(CacheFailure());
-      }
+      // try {
+      //   final cachedProduct =
+      //       await categoryProductsLocalDataSource.getCachedProduct();
+      //   return Right(cachedProduct);
+      // } on ServerException {
+      return Left(ServerFailure());
+      // }
     }
   }
 
