@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider<CartBloc>(
         create: (context) => di.sl<CartBloc>(),
-        child: ProductListPage(),
+        child: const ProductListPage(),
       ),
     );
   }

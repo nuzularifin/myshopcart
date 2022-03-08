@@ -16,6 +16,8 @@ class ItemLoadedEvent extends CartEvent {
       {required this.page, required this.productData, required this.cartData});
 }
 
+class ItemLoadedMoreEvent extends CartEvent {}
+
 class AddingItemIntoCartEvent extends CartEvent {
   final Product selectedProduct;
 

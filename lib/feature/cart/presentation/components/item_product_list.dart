@@ -2,32 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myshopcart/core/utils/theme.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
+import 'package:myshopcart/feature/cart/presentation/detail_product_page.dart';
 
 import '../../domain/entities/product.dart';
 
 class ItemProductList extends StatelessWidget {
   final Product product;
   const ItemProductList({Key? key, required this.product}) : super(key: key);
-
-  // openCart(context) {
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (_) => BlocProvider.value(
-  //               child: CartListPages(),
-  //               value: BlocProvider.of<CartBloc>(context))));
-  // }
-
-  // openDetail(context) {
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //           builder: (_) => BlocProvider.value(
-  //               child: DetailProductPage(
-  //                 product: product,
-  //               ),
-  //               value: BlocProvider.of<CartShopBloc>(context))));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,14 +26,12 @@ class ItemProductList extends StatelessWidget {
           borderRadius: BorderRadius.circular(8)),
       child: InkWell(
         onTap: () {
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (_) => BlocProvider.value(
-          //             child: DetailProductPage(
-          //               product: product,
-          //             ),
-          //             value: BlocProvider.of<CartShopBloc>(context))));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => BlocProvider.value(
+                      child: DetailProductPage(product: product),
+                      value: BlocProvider.of<CartBloc>(context))));
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,

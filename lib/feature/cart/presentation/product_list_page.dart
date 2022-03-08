@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
+import 'package:myshopcart/feature/cart/presentation/detail_product_page.dart';
 import 'cart_list_page.dart';
 import 'components/item_product_list.dart';
 

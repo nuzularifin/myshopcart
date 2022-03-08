@@ -6,6 +6,7 @@ import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/add_product_to_cart.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/delete_product_from_cart.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_cart_list.dart';
+import 'package:myshopcart/feature/cart/domain/usecases/get_detail_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_product_list.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/update_qty_product_from_cart.dart';
 
@@ -18,6 +19,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final AddProductToCartUseCase addProductToCartUseCase;
   final DeleteProductFromCartUsecase deleteProductFromCartUsecase;
   final UpdateQtyProductFromCartUseCase updateQtyProductFromCartUseCase;
+  final GetDetailProductUseCase getDetailProductUseCase;
 
   List<Product> productData = [];
   List<Product> cartData = [];
@@ -27,7 +29,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       required this.getCartListUsecase,
       required this.addProductToCartUseCase,
       required this.deleteProductFromCartUsecase,
-      required this.updateQtyProductFromCartUseCase})
+      required this.updateQtyProductFromCartUseCase,
+      required this.getDetailProductUseCase})
       : super(CartInitial()) {
     on<CartEvent>((event, emit) async {
       if (event is ItemLoadedEvent) {

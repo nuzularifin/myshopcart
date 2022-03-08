@@ -8,6 +8,7 @@ import 'package:myshopcart/feature/cart/domain/repositories/category_product_rep
 import 'package:myshopcart/feature/cart/domain/usecases/add_product_to_cart.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/delete_product_from_cart.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_cart_list.dart';
+import 'package:myshopcart/feature/cart/domain/usecases/get_detail_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_product_list.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/update_qty_product_from_cart.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
@@ -25,7 +26,7 @@ Future<void> init() async {
       getCartListUsecase: sl(),
       addProductToCartUseCase: sl(),
       deleteProductFromCartUsecase: sl(),
-      updateQtyProductFromCartUseCase: sl()));
+      updateQtyProductFromCartUseCase: sl(), getDetailProductUseCase: sl()));
 
   //!! Data Source Stuff
   sl.registerLazySingleton<CategoryProductRemoteDataSource>(() =>
@@ -44,6 +45,8 @@ Future<void> init() async {
   //! Usecase Stuff
   sl.registerLazySingleton(
       () => GetProductListUsecase(categoryProductRepository: sl()));
+  sl.registerLazySingleton(
+      () => GetDetailProductUseCase(categoryProductRepository: sl()));
   sl.registerLazySingleton(
       () => GetCartListUsecase(categoryProductRepository: sl()));
   sl.registerLazySingleton(

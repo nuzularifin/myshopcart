@@ -18,22 +18,28 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository {
       required this.categoryProductsLocalDataSource});
 
   @override
-  Future<Either<Failure, ResponseProducts>> getProductListByCategory(
-      int dispCtgrNo) {
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<Failure, List<Product>>> getCartList() async {
     return Right(await categoryProductsLocalDataSource.getCartProduct());
   }
 
+  //? List Product
   @override
   Future<Either<Failure, ResponseProducts>> getProductList(int page) async {
     if (await networkInfo.isConnected) {
       return Right(await categoryProductRemoteDataSource.getProductList(page));
     } else {
       return Right(await categoryProductsLocalDataSource.getCachedProduct());
+    }
+  }
+
+  //? Detail Product
+  @override
+  Future<Either<Failure, ResponseProducts>> getDetailProduct(int prdNo) async {
+    if (await networkInfo.isConnected) {
+      return Right(
+          await categoryProductRemoteDataSource.getDetailProduct(prdNo));
+    } else {
+      return Left(ServerFailure());
     }
   }
 

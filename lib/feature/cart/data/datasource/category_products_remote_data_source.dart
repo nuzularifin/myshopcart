@@ -9,7 +9,7 @@ import 'package:xml2json/xml2json.dart';
 
 abstract class CategoryProductRemoteDataSource {
   Future<ResponseProducts> getProductList(int page);
-  Future<ResponseProducts> getProductListByCategory();
+  Future<ResponseProducts> getDetailProduct(int prdNo);
 }
 
 class CategoryProductRemoteDataSourceImpl
@@ -48,13 +48,18 @@ class CategoryProductRemoteDataSourceImpl
   }
 
   @override
-  Future<ResponseProducts> getProductListByCategory() async {
+  Future<ResponseProducts> getDetailProduct(int prdNo) async {
     try {
       dioService.settingLog();
-      int category = 0;
-      var response = await dioService.dio.get('cateservice/category/$category');
+      var response = await dioService.dio.get(
+          ' http://api.elevenia.co.id/rest/prodservices/product/details/$prdNo');
       if (response.statusCode == 200) {
-        ResponseProducts categoryProduct = ResponseProducts();
+        Xml2Json xml2json = Xml2Json();
+        xml2json.parse(response.data.toString());
+        var json = xml2json.toParker();
+        print(json);
+        ResponseProducts categoryProduct =
+            ResponseProducts.fromJson(jsonDecode(json));
         return categoryProduct;
       } else {
         throw ServerException();
