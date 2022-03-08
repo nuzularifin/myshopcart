@@ -2,13 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myshopcart/core/utils/theme.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
+import 'package:myshopcart/feature/cart/presentation/cart_list_page.dart';
 import 'package:myshopcart/feature/cart/presentation/detail_product_page.dart';
 
 import '../../domain/entities/product.dart';
 
 class ItemProductList extends StatelessWidget {
   final Product product;
-  const ItemProductList({Key? key, required this.product}) : super(key: key);
+  final BuildContext context;
+  const ItemProductList(
+      {Key? key, required this.product, required this.context})
+      : super(key: key);
+
+  openCart() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+                child: CartListPage(),
+                value: BlocProvider.of<CartBloc>(context))));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,10 +49,8 @@ class ItemProductList extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.network(
-              'https://www.arraymedical.com/wp-content/uploads/2018/12/product-image-placeholder.jpg',
-              height: MediaQuery.of(context).size.height * 0.14,
-            ),
+            Image.asset('assets/images/product_image_placeholder.jpeg',
+                height: MediaQuery.of(context).size.height * 0.14),
             const SizedBox(
               height: Margin.l,
             ),

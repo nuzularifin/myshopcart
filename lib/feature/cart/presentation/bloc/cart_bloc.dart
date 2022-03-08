@@ -5,6 +5,7 @@ import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/add_product_to_cart.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/delete_product_from_cart.dart';
+import 'package:myshopcart/feature/cart/domain/usecases/get_cached_list_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_cart_list.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_detail_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_product_list.dart';
@@ -20,6 +21,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final DeleteProductFromCartUsecase deleteProductFromCartUsecase;
   final UpdateQtyProductFromCartUseCase updateQtyProductFromCartUseCase;
   final GetDetailProductUseCase getDetailProductUseCase;
+  final GetCachedListProductUseCase getCachedListProductUseCase;
 
   List<Product> productData = [];
   List<Product> cartData = [];
@@ -30,19 +32,50 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       required this.addProductToCartUseCase,
       required this.deleteProductFromCartUsecase,
       required this.updateQtyProductFromCartUseCase,
-      required this.getDetailProductUseCase})
+      required this.getDetailProductUseCase,
+      required this.getCachedListProductUseCase})
       : super(CartInitial()) {
     on<CartEvent>((event, emit) async {
       if (event is ItemLoadedEvent) {
+        emit(CartLoadingState());
         var product =
             await getProductListUsecase(GetProductListParams(page: event.page));
-        product.fold((failure) {
+        product.fold((failure) async {
           productData = [];
         }, (response) {
           if (response.products!.product!.isEmpty) {
             productData = [];
           } else {
-            productData = response.products!.product!;
+            if (response.products!.product!.length < 5) emit(LastPage());
+            productData.addAll(response.products!.product!);
+          }
+        });
+
+        var cartItems = await getCartListUsecase(NoParams());
+        cartItems.fold((failure) {
+          cartData = [];
+        }, (success) {
+          cartData = [];
+          cartData.addAll(success);
+        });
+        checkingCartWithProduct();
+        emit(CartLoadedState(cartData: cartData, productData: productData));
+      } else if (event is ItemLoadedMorePage) {
+        var product =
+            await getProductListUsecase(GetProductListParams(page: event.page));
+        product.fold((failure) {
+          productData = [];
+        }, (response) {
+          if (response.products != null) {
+            if (response.products!.product!.isNotEmpty &&
+                response.products!.product!.length > 5) {
+              emit(NextPage());
+            } else {
+              emit(LastPage());
+            }
+            productData.addAll(response.products!.product!);
+          } else {
+            emit(LastPage());
           }
         });
         var cartItems = await getCartListUsecase(NoParams());
@@ -52,7 +85,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           cartData = [];
           cartData.addAll(success);
         });
-        checkingCartWithProduct();
         emit(CartLoadedState(cartData: cartData, productData: productData));
       } else if (event is AddingItemIntoCartEvent) {
         event.selectedProduct.isSelected = true;

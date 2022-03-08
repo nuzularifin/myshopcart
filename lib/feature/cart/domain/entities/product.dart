@@ -39,6 +39,7 @@ class Product {
   String? tmpltSeq;
   String? validateMsg;
   String? nResult;
+  @HiveField(3)
   String? dispCtgrNm;
   String? dispCtgrNmMid;
   String? dispCtgrNmRoot;
@@ -48,7 +49,7 @@ class Product {
   // ProductOptionDetails? productOptionDetails;
   String? dispCtgrNo1;
   String? stock;
-  @HiveField(3)
+  @HiveField(4)
   int qty = 0;
 
   bool isSelected = false;

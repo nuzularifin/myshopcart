@@ -20,13 +20,14 @@ class ProductAdapter extends TypeAdapter<Product> {
       prdNm: fields[0] as String?,
       prdNo: fields[1] as String?,
       selPrc: fields[2] as String?,
-    )..qty = fields[3] as int;
+      dispCtgrNm: fields[3] as String?,
+    )..qty = fields[4] as int;
   }
 
   @override
   void write(BinaryWriter writer, Product obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.prdNm)
       ..writeByte(1)
@@ -34,6 +35,8 @@ class ProductAdapter extends TypeAdapter<Product> {
       ..writeByte(2)
       ..write(obj.selPrc)
       ..writeByte(3)
+      ..write(obj.dispCtgrNm)
+      ..writeByte(4)
       ..write(obj.qty);
   }
 

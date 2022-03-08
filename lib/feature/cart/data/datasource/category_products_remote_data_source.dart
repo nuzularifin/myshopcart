@@ -35,9 +35,17 @@ class CategoryProductRemoteDataSourceImpl
         print(json);
         ResponseProducts categoryProduct =
             ResponseProducts.fromJson(jsonDecode(json));
-        for (var element in categoryProduct.products!.product!) {
-          element.qty = 1;
+
+        if (categoryProduct.products != null) {
+          for (var element in categoryProduct.products!.product!) {
+            element.qty = 1;
+          }
+          categoryProductsLocalDataSource
+              .saveProductToDatabase(categoryProduct.products!.product!);
+        } else {
+          print('get null data');
         }
+
         return categoryProduct;
       } else {
         throw ServerException();

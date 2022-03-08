@@ -32,27 +32,26 @@ class _DetailProductPageState extends State<DetailProductPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Detail Produk'),
+          title: const Text('Detail Produk'),
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.arrow_back)),
+              icon: const Icon(Icons.arrow_back)),
         ),
         body: BlocBuilder<CartBloc, CartState>(builder: (context, state) {
           if (state is DetailLoadingState) {
-            return Container(
+            return SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: Center(child: CircularProgressIndicator()),
+              child: const Center(child: CircularProgressIndicator()),
             );
           } else {
             return SizedBox(
               width: double.infinity,
               child: Column(children: [
-                Image.network(
-                  'https://www.arraymedical.com/wp-content/uploads/2018/12/product-image-placeholder.jpg',
-                  fit: BoxFit.fill,
+                Image.asset(
+                  'assets/images/product_image_placeholder.jpeg',
                   height: MediaQuery.of(context).size.height * 0.4,
                 ),
                 Container(

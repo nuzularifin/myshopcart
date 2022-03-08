@@ -42,7 +42,7 @@ class CartListPageState extends State<CartListPage> {
                     shrinkWrap: true,
                     itemCount: cartItems.isEmpty ? 0 : cartItems.length,
                     itemBuilder: (BuildContext ctx, int index) {
-                      return Container(
+                      return SizedBox(
                         height: 150,
                         width: double.infinity,
                         child: Padding(
@@ -51,12 +51,14 @@ class CartListPageState extends State<CartListPage> {
                             children: [
                               Row(
                                 children: [
-                                  Image.network(
-                                    'https://www.arraymedical.com/wp-content/uploads/2018/12/product-image-placeholder.jpg',
-                                    height: 70,
-                                    width: 70,
+                                  Image.asset(
+                                    'assets/images/product_image_placeholder.jpeg',
+                                    height: MediaQuery.of(context).size.height *
+                                        0.07,
+                                    width: MediaQuery.of(context).size.height *
+                                        0.07,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: Margin.l,
                                   ),
                                   Expanded(
@@ -124,7 +126,7 @@ class CartListPageState extends State<CartListPage> {
                                   ),
                                 ],
                               ),
-                              Divider(),
+                              const Divider(),
                             ],
                           ),
                         ),

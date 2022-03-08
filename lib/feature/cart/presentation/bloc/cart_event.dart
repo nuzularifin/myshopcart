@@ -16,7 +16,14 @@ class ItemLoadedEvent extends CartEvent {
       {required this.page, required this.productData, required this.cartData});
 }
 
-class ItemLoadedMoreEvent extends CartEvent {}
+class ItemLoadedMorePage extends CartEvent {
+  final int page;
+  final Products productData;
+  final Products cartData;
+
+  const ItemLoadedMorePage(
+      {required this.page, required this.productData, required this.cartData});
+}
 
 class DetailProductLoadedEvent extends CartEvent {
   final String prdNo;

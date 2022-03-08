@@ -8,6 +8,7 @@ abstract class CategoryProductsLocalDataSource {
   Future<List<Product>> deleteProductFromCart(Product product);
   Future<List<Product>> updateQtyProductFromCart(String type, Product product);
   Future<ResponseProducts> getCachedProduct();
+  Future<void> saveProductToDatabase(List<Product> products);
 }
 
 class CategoryProductsLocalDataSourceImpl
@@ -16,20 +17,14 @@ class CategoryProductsLocalDataSourceImpl
 
   @override
   Future<ResponseProducts> getCachedProduct() async {
-    late ResponseProducts categoryProduct;
     List<Product> productList = [];
     // open Box for DB
-    var box = await Hive.openBox<List<Product>>('products');
+    var box = await Hive.openBox<Product>('products');
     // set to Object ProductList;
-    productList = box.values.toList() as List<Product>;
-    if (productList.isNotEmpty) {
-      Products products = Products(product: productList);
-      categoryProduct = ResponseProducts(products: products);
-    } else {
-      Products products = Products(product: []);
-      categoryProduct = ResponseProducts(products: products);
-    }
-    return categoryProduct;
+    productList = box.values.toList();
+    ResponseProducts responseProducts =
+        ResponseProducts(products: Products(product: productList));
+    return responseProducts;
   }
 
   @override
@@ -78,5 +73,14 @@ class CategoryProductsLocalDataSourceImpl
     }
     cartItems = box.values.toList();
     return cartItems;
+  }
+
+  @override
+  Future<void> saveProductToDatabase(List<Product> products) async {
+    var box = await Hive.openBox<Product>('products');
+    for (final data in products) {
+      box.add(data);
+      print('save to db Product number ${data.prdNo}');
+    }
   }
 }

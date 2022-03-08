@@ -9,6 +9,7 @@ abstract class CategoryProductRepository {
   Future<Either<Failure, Product>> getDetailProduct(String prdNo);
   Future<Either<Failure, List<Product>>> getCartList();
   //! From DB
+  Future<Either<Failure, ResponseProducts>> getCachedProductList();
   Future<Either<Failure, List<Product>>> addProductToCart(Product product);
   Future<Either<Failure, List<Product>>> deleteProductFromCart(Product product);
   Future<Either<Failure, List<Product>>> updateQtyProductFromCart(
