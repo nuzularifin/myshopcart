@@ -10,7 +10,7 @@ abstract class CartEvent extends Equatable {
 class ItemLoadedEvent extends CartEvent {
   final int page;
   final Products productData;
-  final Products cartData;
+  final List<CartProduct> cartData;
 
   const ItemLoadedEvent(
       {required this.page, required this.productData, required this.cartData});
@@ -19,10 +19,16 @@ class ItemLoadedEvent extends CartEvent {
 class ItemLoadedMorePage extends CartEvent {
   final int page;
   final Products productData;
-  final Products cartData;
+  final List<CartProduct> cartData;
 
   const ItemLoadedMorePage(
       {required this.page, required this.productData, required this.cartData});
+}
+
+class SearchProductEvent extends CartEvent {
+  final String query;
+
+  const SearchProductEvent({required this.query});
 }
 
 class DetailProductLoadedEvent extends CartEvent {
@@ -38,13 +44,13 @@ class AddingItemIntoCartEvent extends CartEvent {
 }
 
 class DeletingItemFromCartEvent extends CartEvent {
-  final Product selectedProduct;
+  final CartProduct selectedProduct;
 
   const DeletingItemFromCartEvent({required this.selectedProduct});
 }
 
 class UpdateQtyProductFromCartEvent extends CartEvent {
-  final Product selectedProduct;
+  final CartProduct selectedProduct;
   final String type;
 
   const UpdateQtyProductFromCartEvent(

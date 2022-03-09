@@ -1,12 +1,15 @@
 import 'package:hive/hive.dart';
+import 'package:myshopcart/feature/cart/domain/entities/cart_product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import '../../domain/entities/product.dart';
 
 abstract class CategoryProductsLocalDataSource {
-  Future<List<Product>> getCartProduct();
-  Future<List<Product>> addProductToCart(Product product);
-  Future<List<Product>> deleteProductFromCart(Product product);
-  Future<List<Product>> updateQtyProductFromCart(String type, Product product);
+  Future<List<CartProduct>> getCartProduct();
+  Future<List<Product>> searchProduct(String query);
+  Future<List<CartProduct>> addProductToCart(Product product);
+  Future<List<CartProduct>> deleteProductFromCart(CartProduct product);
+  Future<List<CartProduct>> updateQtyProductFromCart(
+      String type, CartProduct product);
   Future<ResponseProducts> getCachedProduct();
   Future<void> saveProductToDatabase(List<Product> products);
 }
@@ -19,74 +22,90 @@ class CategoryProductsLocalDataSourceImpl
   Future<ResponseProducts> getCachedProduct() async {
     List<Product> productList = [];
     // open Box for DB
-    var box = await Hive.openBox<Product>('products');
+    var box = await Hive.openBox('products');
     // set to Object ProductList;
-    productList = box.values.toList();
+    productList = List<Product>.from(box.values.toList());
     ResponseProducts responseProducts =
         ResponseProducts(products: Products(product: productList));
     return responseProducts;
   }
 
   @override
-  Future<List<Product>> getCartProduct() async {
-    List<Product> cartItems = [];
-    var box = await Hive.openBox<Product>('cart_box');
-    cartItems = box.values.toList();
+  Future<List<CartProduct>> getCartProduct() async {
+    List<CartProduct> cartItems = [];
+    var box = await Hive.openBox('cart');
+    cartItems = List<CartProduct>.from(box.values.toList());
     return cartItems;
   }
 
   @override
-  Future<List<Product>> addProductToCart(Product product) async {
-    List<Product> cartItems = [];
-    var box = Hive.box<Product>('cart_box');
-    box.add(product);
-    cartItems = box.values.toList();
+  Future<List<CartProduct>> addProductToCart(Product product) async {
+    List<CartProduct> cartItems = [];
+    var box = Hive.box('cart');
+    CartProduct cartProduct = CartProduct(
+        prdNm: product.prdNm!,
+        prdNo: product.prdNo!,
+        selPrc: product.selPrc!,
+        dispCtgrNm: product.dispCtgrNm!,
+        qty: 1);
+    box.add(cartProduct);
+    cartItems = List<CartProduct>.from(box.values.toList());
     return cartItems;
   }
 
   @override
-  Future<List<Product>> deleteProductFromCart(Product product) async {
-    List<Product> cartItems = [];
-    var box = Hive.box<Product>('cart_box');
-    cartItems = box.values.toList();
+  Future<List<CartProduct>> deleteProductFromCart(CartProduct product) async {
+    List<CartProduct> cartItems = [];
+    var box = Hive.box('cart');
+    cartItems = List<CartProduct>.from(box.values.toList());
     int index =
         cartItems.indexWhere((element) => product.prdNo == element.prdNo);
     box.deleteAt(index);
-    cartItems = box.values.toList();
+    cartItems = List<CartProduct>.from(box.values.toList());
     return cartItems;
   }
 
   @override
-  Future<List<Product>> updateQtyProductFromCart(
-      String type, Product product) async {
-    List<Product> cartItems = [];
-    var box = Hive.box<Product>('cart_box');
-    cartItems = box.values.toList();
+  Future<List<CartProduct>> updateQtyProductFromCart(
+      String type, CartProduct product) async {
+    List<CartProduct> cartItems = [];
+    var box = Hive.box('cart');
+    cartItems = List<CartProduct>.from(box.values.toList());
     int index =
         cartItems.indexWhere((element) => element.prdNo == product.prdNo);
     if (type == 'increment') {
-      product.qty++;
-      box.putAt(index, product);
+      cartItems[index].qty++;
+      box.putAt(index, cartItems[index]);
     } else {
-      product.qty--;
-      box.putAt(index, product);
+      cartItems[index].qty--;
+      box.putAt(index, cartItems[index]);
     }
-    cartItems = box.values.toList();
+    cartItems = List<CartProduct>.from(box.values.toList());
     return cartItems;
   }
 
   @override
   Future<void> saveProductToDatabase(List<Product> products) async {
-    var box = await Hive.openBox<Product>('products');
+    await Hive.openBox('products');
+    var box = Hive.box('products');
     for (final data in products) {
-      List<Product> tempData = box.values.toList();
-      int index = tempData.indexWhere((element) => data.prdNo == element.prdNo);
-      if (index != -1) {
-        print('Delete the Data in $index has same value ${data.prdNo}');
-        box.deleteAt(index);
+      if (!box.containsKey(data.prdNo)) {
+        await box.put(data.prdNo, data);
       }
-      box.add(data);
-      print('save to db Product number ${data.prdNo}');
     }
+    List<Product> totalData = List<Product>.from(box.values.toList());
+    print('total data in datbase ${totalData.length}');
+  }
+
+  @override
+  Future<List<Product>> searchProduct(String query) async {
+    List<Product> productList = [];
+    var box = await Hive.openBox<Product>('products');
+    var productDB = box.values.toList();
+    productList = productDB.cast<Product>();
+    List<Product> filteringData = [];
+    filteringData =
+        productList.where((element) => element.prdNm!.contains(query)).toList();
+    return filteringData;
   }
 }

@@ -78,23 +78,23 @@ class _DetailProductPageState extends State<DetailProductPage> {
                         children: [
                           IconButton(
                               onPressed: () {
-                                if (widget.product.qty > 0) {
-                                  BlocProvider.of<CartBloc>(context).add(
-                                      UpdateQtyProductFromCartEvent(
-                                          selectedProduct: widget.product,
-                                          type: 'decrement'));
-                                }
+                                // if (widget.product.qty > 0) {
+                                //   BlocProvider.of<CartBloc>(context).add(
+                                //       UpdateQtyProductFromCartEvent(
+                                //           selectedProduct: widget.product,
+                                //           type: 'decrement'));
+                                // }
                               },
                               icon: const Icon(Icons.remove)),
                           Text(widget.product.qty.toString()),
                           IconButton(
                               onPressed: () {
-                                if (widget.product.qty >= 0) {
-                                  BlocProvider.of<CartBloc>(context).add(
-                                      UpdateQtyProductFromCartEvent(
-                                          selectedProduct: widget.product,
-                                          type: 'increment'));
-                                }
+                                // if (widget.product.qty >= 0) {
+                                //   BlocProvider.of<CartBloc>(context).add(
+                                //       UpdateQtyProductFromCartEvent(
+                                //           selectedProduct: widget.product,
+                                //           type: 'increment'));
+                                // }
                               },
                               icon: const Icon(Icons.add)),
                           const Spacer(),

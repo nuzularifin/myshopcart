@@ -11,6 +11,7 @@ import 'package:myshopcart/feature/cart/domain/usecases/get_cached_list_product.
 import 'package:myshopcart/feature/cart/domain/usecases/get_cart_list.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_detail_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_product_list.dart';
+import 'package:myshopcart/feature/cart/domain/usecases/get_search_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/update_qty_product_from_cart.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
 
@@ -28,7 +29,9 @@ Future<void> init() async {
       addProductToCartUseCase: sl(),
       deleteProductFromCartUsecase: sl(),
       updateQtyProductFromCartUseCase: sl(),
-      getDetailProductUseCase: sl(), getCachedListProductUseCase: sl()));
+      getDetailProductUseCase: sl(),
+      getCachedListProductUseCase: sl(),
+      getSearchProductUseCase: sl()));
 
   //!! Data Source Stuff
   sl.registerLazySingleton<CategoryProductRemoteDataSource>(() =>
@@ -59,6 +62,8 @@ Future<void> init() async {
       () => UpdateQtyProductFromCartUseCase(categoryProductRepository: sl()));
   sl.registerLazySingleton(
       () => GetCachedListProductUseCase(categoryProductRepository: sl()));
+  sl.registerLazySingleton(
+      () => GetSearchProductUseCase(categoryProductRepository: sl()));
 
   //! Core Stuff
   sl.registerLazySingleton(() => GlobalVariables());

@@ -32,7 +32,6 @@ class CategoryProductRemoteDataSourceImpl
         Xml2Json xml2json = Xml2Json();
         xml2json.parse(response.data.toString());
         var json = xml2json.toParker();
-        print(json);
         ResponseProducts categoryProduct =
             ResponseProducts.fromJson(jsonDecode(json));
 
@@ -40,6 +39,7 @@ class CategoryProductRemoteDataSourceImpl
           for (var element in categoryProduct.products!.product!) {
             element.qty = 1;
           }
+
           categoryProductsLocalDataSource
               .saveProductToDatabase(categoryProduct.products!.product!);
         } else {

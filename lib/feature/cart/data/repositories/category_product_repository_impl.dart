@@ -1,6 +1,7 @@
 import 'package:myshopcart/core/network/network_info.dart';
 import 'package:myshopcart/feature/cart/data/datasource/category_products_local_data_source.dart';
 import 'package:myshopcart/feature/cart/data/datasource/category_products_remote_data_source.dart';
+import 'package:myshopcart/feature/cart/domain/entities/cart_product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import 'package:myshopcart/core/error/failure.dart';
@@ -18,7 +19,7 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository {
       required this.categoryProductsLocalDataSource});
 
   @override
-  Future<Either<Failure, List<Product>>> getCartList() async {
+  Future<Either<Failure, List<CartProduct>>> getCartList() async {
     return Right(await categoryProductsLocalDataSource.getCartProduct());
   }
 
@@ -28,13 +29,7 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository {
     if (await networkInfo.isConnected) {
       return Right(await categoryProductRemoteDataSource.getProductList(page));
     } else {
-      // try {
-      //   final cachedProduct =
-      //       await categoryProductsLocalDataSource.getCachedProduct();
-      //   return Right(cachedProduct);
-      // } on ServerException {
       return Left(ServerFailure());
-      // }
     }
   }
 
@@ -56,23 +51,28 @@ class CategoryProductRepositoryImpl extends CategoryProductRepository {
   }
 
   @override
-  Future<Either<Failure, List<Product>>> addProductToCart(
+  Future<Either<Failure, List<CartProduct>>> addProductToCart(
       Product product) async {
     return Right(
         await categoryProductsLocalDataSource.addProductToCart(product));
   }
 
   @override
-  Future<Either<Failure, List<Product>>> deleteProductFromCart(
-      Product product) async {
+  Future<Either<Failure, List<CartProduct>>> deleteProductFromCart(
+      CartProduct product) async {
     return Right(
         await categoryProductsLocalDataSource.deleteProductFromCart(product));
   }
 
   @override
-  Future<Either<Failure, List<Product>>> updateQtyProductFromCart(
-      String type, Product product) async {
+  Future<Either<Failure, List<CartProduct>>> updateQtyProductFromCart(
+      String type, CartProduct product) async {
     return Right(await categoryProductsLocalDataSource.updateQtyProductFromCart(
         type, product));
+  }
+
+  @override
+  Future<Either<Failure, List<Product>>> searchProduct(String query) async {
+    return Right(await categoryProductsLocalDataSource.searchProduct(query));
   }
 }

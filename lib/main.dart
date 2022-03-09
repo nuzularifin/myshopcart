@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:myshopcart/feature/cart/domain/entities/cart_product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
 import 'package:myshopcart/feature/cart/presentation/product_list_page.dart';
@@ -11,6 +12,9 @@ void main() async {
   await di.init();
   await Hive.initFlutter();
   Hive.registerAdapter(ProductAdapter());
+  Hive.registerAdapter(CartProductAdapter());
+  await Hive.openBox('cart');
+  await Hive.openBox('product');
   runApp(const MyApp());
 }
 

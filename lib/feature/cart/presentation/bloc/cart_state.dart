@@ -15,22 +15,17 @@ class CartEmptyState extends CartState {}
 
 class CartLoadedState extends CartState {
   final List<Product> productData;
-  final List<Product> cartData;
+  final List<CartProduct> cartData;
 
   const CartLoadedState({required this.productData, required this.cartData});
 }
 
 class CartLoadedMoreState extends CartLoadedState {
   final List<Product> productData;
-  final List<Product> cartData;
+  final List<CartProduct> cartData;
 
   const CartLoadedMoreState({required this.productData, required this.cartData})
       : super(productData: productData, cartData: cartData);
-
-  @override
-  String toString() {
-    return '''PostState {order_list: ${productData.length} }''';
-  }
 }
 
 class NextPage extends CartState {}

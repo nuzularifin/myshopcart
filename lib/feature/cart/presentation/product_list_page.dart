@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:myshopcart/feature/cart/domain/entities/cart_product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/product.dart';
 import 'package:myshopcart/feature/cart/domain/entities/response_products.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
@@ -16,16 +17,17 @@ class ProductListPage extends StatefulWidget {
 
 class _ProductListPageState extends State<ProductListPage> {
   List<Product> productData = [];
-  List<Product> cartData = [];
+  List<CartProduct> cartData = [];
   late ScrollController _scrollController;
   bool isLastPage = false;
   int page = 1;
+  final TextEditingController _inputSearch = TextEditingController();
 
   @override
   void initState() {
     BlocProvider.of<CartBloc>(context).add(ItemLoadedEvent(
         page: page,
-        cartData: Products(product: cartData),
+        cartData: cartData,
         productData: Products(product: productData)));
     _scrollController = ScrollController()..addListener(_scrollListener);
     super.initState();
@@ -53,7 +55,7 @@ class _ProductListPageState extends State<ProductListPage> {
         page++;
         BlocProvider.of<CartBloc>(context).add(ItemLoadedMorePage(
             page: page,
-            cartData: Products(product: cartData),
+            cartData: cartData,
             productData: Products(product: productData)));
       }
     }
@@ -66,6 +68,7 @@ class _ProductListPageState extends State<ProductListPage> {
         if (state is CartLoadedState) {
           productData = state.productData;
           cartData = state.cartData;
+          print('Total data UI -> ${productData.length}');
         }
         if (state is NextPage) {
           isLastPage = false;
@@ -78,6 +81,7 @@ class _ProductListPageState extends State<ProductListPage> {
           return Scaffold(
             appBar: AppBar(
               title: const Text('Produk'),
+              automaticallyImplyLeading: false,
               actions: [
                 Center(
                   child: Stack(
@@ -122,22 +126,54 @@ class _ProductListPageState extends State<ProductListPage> {
                     )
                   else
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 0.7,
-                                  mainAxisSpacing: 5,
-                                  crossAxisSpacing: 10),
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount:
-                              productData.isNotEmpty ? productData.length : 0,
-                          itemBuilder: (context, index) {
-                            return ItemProductList(product: productData[index]);
-                          }),
-                    ),
+                        padding: const EdgeInsets.all(12),
+                        child: Container(
+                          width: double.infinity,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5)),
+                          child: Center(
+                            child: TextField(
+                              onSubmitted: (value) {
+                                _inputSearch.text = value;
+                                BlocProvider.of<CartBloc>(context)
+                                    .add(SearchProductEvent(
+                                  query: _inputSearch.text,
+                                ));
+                              },
+                              controller: _inputSearch,
+                              decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.search),
+                                  suffixIcon: IconButton(
+                                    icon: const Icon(Icons.clear),
+                                    onPressed: () {
+                                      /* Clear the search field */
+                                      _inputSearch.text = "";
+                                    },
+                                  ),
+                                  hintText: 'Search...',
+                                  border: InputBorder.none),
+                            ),
+                          ),
+                        )),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                childAspectRatio: 0.7,
+                                mainAxisSpacing: 5,
+                                crossAxisSpacing: 10),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount:
+                            productData.isNotEmpty ? productData.length : 0,
+                        itemBuilder: (context, index) {
+                          return ItemProductList(product: productData[index]);
+                        }),
+                  ),
                 ],
               ),
             ),

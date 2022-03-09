@@ -8,10 +8,7 @@ class DioHandlingResponse {
 
   setThrow() {
     if (dioError.type == DioErrorType.connectTimeout) {
-      // throw ServerException();
-      int code = dioError.response!.statusCode!;
-      String message = dioError.response!.statusMessage!;
-      return ResponseException(errorCode: code, message: message);
+      return ResponseException(errorCode: 500, message: dioError.type.name);
     } else if (dioError.type == DioErrorType.other) {
       print(
           'Error Type - OTHER - Get Response Code -> ${dioError.response!.statusCode}');
@@ -26,19 +23,9 @@ class DioHandlingResponse {
       if (dioError.response!.statusCode == 402) {
         print(
             'Error Type - ${dioError.type} - Get Response Code -> ${dioError.response!.statusCode}');
-        // ResponseCore responseCore =
-        //     ResponseCore.fromJson(dioError.response!.data);
-        // return MetaException(
-        //     errorCode: responseCore.meta.code,
-        //     message: responseCore.meta.errorMessage);
       } else if (dioError.response!.statusCode == 401) {
         print(
             'Error Type - ${dioError.type} - Get Response Code -> ${dioError.response!.statusCode}');
-        // ResponseCore responseCore =
-        //     ResponseCore.fromJson(dioError.response!.data);
-        // return MetaException(
-        //     errorCode: responseCore.meta.code,
-        //     message: responseCore.meta.errorMessage);
       } else {
         print(
             'Error Type - ${dioError.type} - Get Response Code -> ${dioError.response!.statusCode}');

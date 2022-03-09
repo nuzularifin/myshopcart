@@ -9,7 +9,10 @@ import 'package:myshopcart/feature/cart/domain/usecases/get_cached_list_product.
 import 'package:myshopcart/feature/cart/domain/usecases/get_cart_list.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_detail_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/get_product_list.dart';
+import 'package:myshopcart/feature/cart/domain/usecases/get_search_product.dart';
 import 'package:myshopcart/feature/cart/domain/usecases/update_qty_product_from_cart.dart';
+
+import '../../domain/entities/cart_product.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
@@ -22,9 +25,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final UpdateQtyProductFromCartUseCase updateQtyProductFromCartUseCase;
   final GetDetailProductUseCase getDetailProductUseCase;
   final GetCachedListProductUseCase getCachedListProductUseCase;
+  final GetSearchProductUseCase getSearchProductUseCase;
 
   List<Product> productData = [];
-  List<Product> cartData = [];
+  List<CartProduct> cartData = [];
 
   CartBloc(
       {required this.getProductListUsecase,
@@ -33,7 +37,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       required this.deleteProductFromCartUsecase,
       required this.updateQtyProductFromCartUseCase,
       required this.getDetailProductUseCase,
-      required this.getCachedListProductUseCase})
+      required this.getCachedListProductUseCase,
+      required this.getSearchProductUseCase})
       : super(CartInitial()) {
     on<CartEvent>((event, emit) async {
       if (event is ItemLoadedEvent) {
@@ -67,15 +72,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             if (r.products != null) productData.addAll(r.products!.product!);
           });
         }
-
-        var cartItems = await getCartListUsecase(NoParams());
-        cartItems.fold((failure) {
-          cartData = [];
-        }, (success) {
-          cartData = [];
-          cartData.addAll(success);
-        });
-        checkingCartWithProduct();
+        await checkCartItems();
+        await checkingCartWithProduct();
         emit(CartLoadedState(cartData: cartData, productData: productData));
       } else if (event is ItemLoadedMorePage) {
         var product =
@@ -95,13 +93,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
             emit(LastPage());
           }
         });
-        var cartItems = await getCartListUsecase(NoParams());
-        cartItems.fold((failure) {
-          cartData = [];
-        }, (success) {
-          cartData = [];
-          cartData.addAll(success);
-        });
+        await checkCartItems();
         emit(CartLoadedState(cartData: cartData, productData: productData));
       } else if (event is AddingItemIntoCartEvent) {
         event.selectedProduct.isSelected = true;
@@ -130,7 +122,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       } else if (event is UpdateQtyProductFromCartEvent) {
         var cartDB = await updateQtyProductFromCartUseCase(
             UpdateQtyProductParams(
-                type: event.type, product: event.selectedProduct));
+                type: event.type, cartproduct: event.selectedProduct));
         cartDB.fold((f) {}, (s) {
           cartData = [];
           cartData.addAll(s);
@@ -145,13 +137,33 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         }, (r) {
           emit(DetailLoadedState(product: r));
         });
-
+        emit(CartLoadedState(cartData: cartData, productData: productData));
+      } else if (event is SearchProductEvent) {
+        emit(CartLoadingState());
+        var search = await getSearchProductUseCase(
+            GetSearchProductParams(query: event.query));
+        search.fold((l) {}, (r) {
+          productData = [];
+          productData.addAll(r);
+        });
+        await checkCartItems();
+        await checkingCartWithProduct();
         emit(CartLoadedState(cartData: cartData, productData: productData));
       }
     });
   }
 
-  void checkingCartWithProduct() {
+  checkCartItems() async {
+    var cartItems = await getCartListUsecase(NoParams());
+    cartItems.fold((failure) {
+      cartData = [];
+    }, (success) {
+      cartData = [];
+      cartData.addAll(success);
+    });
+  }
+
+  checkingCartWithProduct() async {
     for (int a = 0; a < cartData.length; a++) {
       bool sameProd = false;
       for (int b = 0; b < productData.length; b++) {

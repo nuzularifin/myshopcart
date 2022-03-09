@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:myshopcart/core/utils/theme.dart';
-import 'package:myshopcart/feature/cart/domain/entities/product.dart';
+import 'package:myshopcart/feature/cart/domain/entities/cart_product.dart';
 import 'package:myshopcart/feature/cart/presentation/bloc/cart_bloc.dart';
 
 class CartListPage extends StatefulWidget {
@@ -12,7 +12,7 @@ class CartListPage extends StatefulWidget {
 }
 
 class CartListPageState extends State<CartListPage> {
-  List<Product> cartItems = [];
+  List<CartProduct> cartItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +68,7 @@ class CartListPageState extends State<CartListPage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '(${cartItems[index].prdNo}) ${cartItems[index].prdNm!}',
+                                          '(${cartItems[index].prdNo}) ${cartItems[index].prdNm}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(fontSize: 12),
@@ -120,7 +120,7 @@ class CartListPageState extends State<CartListPage> {
                                       icon: const Icon(Icons.add)),
                                   Expanded(
                                     child: Text(
-                                      'Rp. ${int.parse(cartItems[index].selPrc!) * cartItems[index].qty}',
+                                      'Rp. ${int.parse(cartItems[index].selPrc) * cartItems[index].qty}',
                                       textAlign: TextAlign.right,
                                     ),
                                   ),
