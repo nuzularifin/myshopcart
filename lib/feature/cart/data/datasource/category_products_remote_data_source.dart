@@ -43,7 +43,7 @@ class CategoryProductRemoteDataSourceImpl
           categoryProductsLocalDataSource
               .saveProductToDatabase(categoryProduct.products!.product!);
         } else {
-          print('get null data');
+          // print('get null data');
         }
 
         return categoryProduct;
@@ -65,7 +65,7 @@ class CategoryProductRemoteDataSourceImpl
         Xml2Json xml2json = Xml2Json();
         xml2json.parse(response.data.toString());
         var json = xml2json.toParker();
-        print(json);
+        // print(json);
         final body = jsonDecode(json);
         Product categoryProduct = Product.fromJson(body['Product']);
         return categoryProduct;

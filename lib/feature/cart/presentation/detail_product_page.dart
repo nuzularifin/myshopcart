@@ -73,36 +73,6 @@ class _DetailProductPageState extends State<DetailProductPage> {
                     ],
                   ),
                 ),
-                widget.product.isSelected
-                    ? Row(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                // if (widget.product.qty > 0) {
-                                //   BlocProvider.of<CartBloc>(context).add(
-                                //       UpdateQtyProductFromCartEvent(
-                                //           selectedProduct: widget.product,
-                                //           type: 'decrement'));
-                                // }
-                              },
-                              icon: const Icon(Icons.remove)),
-                          Text(widget.product.qty.toString()),
-                          IconButton(
-                              onPressed: () {
-                                // if (widget.product.qty >= 0) {
-                                //   BlocProvider.of<CartBloc>(context).add(
-                                //       UpdateQtyProductFromCartEvent(
-                                //           selectedProduct: widget.product,
-                                //           type: 'increment'));
-                                // }
-                              },
-                              icon: const Icon(Icons.add)),
-                          const Spacer(),
-                          Text(
-                              'Rp. ${int.parse(widget.product.selPrc!) * widget.product.qty}'),
-                        ],
-                      )
-                    : Container(),
                 !widget.product.isSelected
                     ? Container(
                         margin: const EdgeInsets.symmetric(horizontal: 16),

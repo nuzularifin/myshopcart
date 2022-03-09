@@ -68,7 +68,7 @@ class _ProductListPageState extends State<ProductListPage> {
         if (state is CartLoadedState) {
           productData = state.productData;
           cartData = state.cartData;
-          print('Total data UI -> ${productData.length}');
+          // print('Total data UI -> ${productData.length}');
         }
         if (state is NextPage) {
           isLastPage = false;
@@ -80,7 +80,7 @@ class _ProductListPageState extends State<ProductListPage> {
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Produk'),
+              title: const Text('Daftar Produk'),
               automaticallyImplyLeading: false,
               actions: [
                 Center(
@@ -126,7 +126,8 @@ class _ProductListPageState extends State<ProductListPage> {
                     )
                   else
                     Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding:
+                            const EdgeInsets.only(left: 12, right: 12, top: 12),
                         child: Container(
                           width: double.infinity,
                           height: 40,

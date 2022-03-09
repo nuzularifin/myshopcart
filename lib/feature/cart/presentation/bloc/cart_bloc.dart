@@ -61,7 +61,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         });
 
         if (statusRequest) {
-          emit(CartLoadingState());
           var productCached = await getCachedListProductUseCase(NoParams());
           statusRequest = false;
           productCached.fold((l) {
@@ -139,7 +138,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         });
         emit(CartLoadedState(cartData: cartData, productData: productData));
       } else if (event is SearchProductEvent) {
-        emit(CartLoadingState());
         var search = await getSearchProductUseCase(
             GetSearchProductParams(query: event.query));
         search.fold((l) {}, (r) {
@@ -148,6 +146,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         });
         await checkCartItems();
         await checkingCartWithProduct();
+        emit(LastPage());
         emit(CartLoadedState(cartData: cartData, productData: productData));
       }
     });
@@ -164,19 +163,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   checkingCartWithProduct() async {
-    for (int a = 0; a < cartData.length; a++) {
-      bool sameProd = false;
-      for (int b = 0; b < productData.length; b++) {
-        if (cartData[a].prdNo == productData[b].prdNo) {
-          sameProd = true;
-        } else {
-          sameProd = false;
-        }
-        if (sameProd) {
-          print(
-              'Data yang sama dengan cart ${productData[b].prdNo} - $sameProd');
-          productData[b].isSelected = true;
-          sameProd = false;
+    for (var element in productData) {
+      for (final data in cartData) {
+        if (element.prdNo!.contains(data.prdNo)) {
+          element.isSelected = true;
+          // print('set product ${element.prdNo} to true');
         }
       }
     }

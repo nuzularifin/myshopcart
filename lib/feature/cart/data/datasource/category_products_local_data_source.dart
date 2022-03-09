@@ -21,9 +21,7 @@ class CategoryProductsLocalDataSourceImpl
   @override
   Future<ResponseProducts> getCachedProduct() async {
     List<Product> productList = [];
-    // open Box for DB
     var box = await Hive.openBox('products');
-    // set to Object ProductList;
     productList = List<Product>.from(box.values.toList());
     ResponseProducts responseProducts =
         ResponseProducts(products: Products(product: productList));
@@ -93,19 +91,21 @@ class CategoryProductsLocalDataSourceImpl
         await box.put(data.prdNo, data);
       }
     }
-    List<Product> totalData = List<Product>.from(box.values.toList());
-    print('total data in datbase ${totalData.length}');
+    // List<Product> totalData = List<Product>.from(box.values.toList());
+    // print('total data in datbase ${totalData.length}');
   }
 
   @override
   Future<List<Product>> searchProduct(String query) async {
     List<Product> productList = [];
-    var box = await Hive.openBox<Product>('products');
-    var productDB = box.values.toList();
+    await Hive.openBox('products');
+    var box = Hive.box('products');
+    var productDB = List<Product>.from(box.values.toList());
     productList = productDB.cast<Product>();
     List<Product> filteringData = [];
-    filteringData =
-        productList.where((element) => element.prdNm!.contains(query)).toList();
+    filteringData = productList
+        .where((element) => element.prdNm!.toLowerCase().contains(query))
+        .toList();
     return filteringData;
   }
 }

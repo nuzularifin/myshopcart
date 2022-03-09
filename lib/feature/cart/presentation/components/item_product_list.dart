@@ -20,12 +20,12 @@ class ItemProductList extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.5,
       decoration: BoxDecoration(
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, 30),
-                blurRadius: 60,
-                color: const Color(0xFF393939).withOpacity(.1))
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //       offset: const Offset(0, 30),
+          //       blurRadius: 60,
+          //       color: const Color(0xFF393939).withOpacity(.1))
+          // ],
           borderRadius: BorderRadius.circular(8)),
       child: InkWell(
         onTap: () {

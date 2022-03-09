@@ -69,9 +69,20 @@ class CartListPageState extends State<CartListPage> {
                                       children: [
                                         Text(
                                           '(${cartItems[index].prdNo}) ${cartItems[index].prdNm}',
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(
+                                          height: Margin.s,
+                                        ),
+                                        Text(
+                                          '${cartItems[index].dispCtgrNm}',
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(fontSize: 12),
+                                          style: const TextStyle(fontSize: 10),
                                         ),
                                       ],
                                     ),
