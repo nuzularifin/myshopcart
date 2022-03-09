@@ -5,9 +5,14 @@ A new Flutter project. This is project for Shopping cart has a many products fro
 ## Getting Started
 
 This project is a starting point for a Flutter application.
-For Running this project you can clone it in https://github.com/nuzularifin/myshopcart
+For Running this project you can clone it in 
+- https://github.com/nuzularifin/myshopcart
 
-After That just refresh your packages and run flutter pub get
+After That just refresh your packages and run flutter pub get.
+
+and then run command from your terminal dont forget must in your project folder. please make sure running this for generate hive object.
+- flutter pub run build_runner watch --delete-conflicting-outputs
+that's command for generate the hive Product and cart Product in your project later. 
 
 Nah, you can run the product to see what happend next.
 
